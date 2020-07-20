@@ -1,0 +1,52 @@
+﻿using GUET.BackEnd.Entity;
+using GUET.BackEnd.Model;
+using GUET.BackEnd.Service;
+using GUET.FrontEnd;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
+
+// https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
+
+namespace GUET
+{
+    /// <summary>
+    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// </summary>
+    public sealed partial class MainPage : Page
+    {
+        public MainPage()
+        {
+            this.InitializeComponent();
+        }
+
+        private void NavigationViewItem_Tapped_CourseTable(object sender, TappedRoutedEventArgs e)
+        {
+            mainPageFrame.Navigate(typeof(CourseTablePage));    //tap到标签
+        }
+
+        private void NavigationViewItem_Tapped_More(object sender, TappedRoutedEventArgs e)
+        {
+            mainPageFrame.Navigate(typeof(PersonInfoPage));    //tap到标签
+        }
+
+        private void NavigationViewItem_Tapped_Score(object sender, TappedRoutedEventArgs e)
+        {
+            mainPageFrame.Navigate(typeof(ScorePage));    //tap到标签
+        }
+    }
+}

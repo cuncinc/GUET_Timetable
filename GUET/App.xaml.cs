@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GUET.FrontEnd;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -66,7 +68,16 @@ namespace GUET
                     // 当导航堆栈尚未还原时，导航到第一页，
                     // 并通过将所需信息作为导航参数传入来配置
                     // 参数
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    if (ApplicationData.Current.LocalSettings.Values["loginStudentID"] as string != null)
+                    {
+                        //如果之前已经登录过了，则直接到主界面
+                        rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    }
+                    else
+                    {
+                        //如果之前没有登录过，则跳转到登陆界面
+                        rootFrame.Navigate(typeof(LoginPage), e.Arguments);
+                    }
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
