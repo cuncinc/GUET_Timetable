@@ -3,12 +3,49 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GUET.FrontEnd"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="TextBlock_GPA" IsReadOnly="True" Margin="12,0,0,0" Width="220" HorizontalTextAlignment="Center"/>
+        <controls:DataGrid
+            x:Name="ScoreGrid"
+            Grid.Row="1"
+            Margin="12"
+            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+            AutoGenerateColumns="False"
+            HorizontalScrollBarVisibility="Visible"
+            VerticalScrollBarVisibility="Visible"
+            AlternatingRowBackground="Linen"
+            AlternatingRowForeground="Gray"
+            AreRowDetailsFrozen="True"
+            AreRowGroupHeadersFrozen="True"
+            CanUserSortColumns="True"
+            CanUserResizeColumns="False"
+            CanUserReorderColumns="True"
+            ColumnHeaderHeight="32"
+            MaxColumnWidth="400"
+            GridLinesVisibility="Horizontal"
+            HeadersVisibility="Column"
+            IsReadOnly="True"
+            RowDetailsVisibilityMode="Collapsed"
+            SelectionMode="Single"
+            ItemsSource="{x:Bind scores}"
+            Sorting="DataGrid_Sorting">
+            <controls:DataGrid.Columns>
+                <controls:DataGridTextColumn Header="学期" Binding="{Binding Term}" Tag="Term" />
+                <controls:DataGridTextColumn Header="课程" Binding="{Binding CourseName}" Tag="CourseName" />
+                <controls:DataGridTextColumn Header="类型" Binding="{Binding CourseType}" Tag="CourseType" />
+                <controls:DataGridTextColumn Header="学分" Binding="{Binding CourseCredit}" Tag="CourseCredit" />
+                <controls:DataGridTextColumn Header="成绩" Binding="{Binding Grade}" Tag="Grade" />
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
     </Grid>
 </Page>

@@ -1,9 +1,11 @@
 ﻿using GUET.BackEnd.Service;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -32,20 +34,21 @@ namespace GUET.FrontEnd
 
         private async void Button_login_Click(object sender, RoutedEventArgs e)
         {
-            string studentID = textBox_loginStudentID.Text;
-            string password = passwordBox.Password;
             progressRing_login.IsActive = true;
 
+            string studentID = textBox_loginStudentID.Text;
+            string password = passwordBox.Password;
             if (await HtmlUtils.Login(studentID, password))  //登录验证
             {
-                //账号密码验证成功
-                this.Frame.Navigate(typeof(MainPage));  //跳转到主界面
+                //账号密码验证成功，注意不要把学号和密码的存储下移，在GetInfo中会用到
                 ApplicationData.Current.LocalSettings.Values["loginStudentID"] = studentID;
                 ApplicationData.Current.LocalSettings.Values["loginPassword"] = password;
+
+                this.Frame.Navigate(typeof(MainPage));  //跳转到主界面
             }
             else
             {
-                MessageDialog tipDialog = new MessageDialog("学号或密码错误，请重新输入")
+                MessageDialog tipDialog = new MessageDialog("无网络连接或密码错误")
                 {
                     Title = "登录失败"
                 };

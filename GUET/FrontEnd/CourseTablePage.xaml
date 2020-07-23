@@ -9,20 +9,58 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel>
-        <ComboBox ItemsSource="{x:Bind schoolWeeks}" Header="第几周" Width="100" SelectionChanged="ComboBox_SelectionChanged"/>
-        <Grid>
+    <!--<Page.Resources>
+        <Flyout x:Name="LessonDetailFlyout" Placement="Full">
+            <ListView ItemsSource="{x:Bind courseDetails}" SelectionMode="None"  IsItemClickEnabled="False">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="model:CourseDetail">
+                        <StackPanel>
+                            <TextBlock Text="{x:Bind CourseName}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Text="课号"/>
+                                <TextBlock Grid.Row="1" Text="教室"/>
+                                <TextBlock Grid.Row="2" Text="老师"/>
+                                <TextBlock Grid.Row="3" Text="学分"/>
+                                <TextBlock Grid.Row="4" Text="周次"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind CourseNo}"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind Classroom}"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind Teacher}"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind CourseCredit}"/>
+                                <TextBlock Grid.Row="4" Grid.Column="1" Text="{x:Bind Weeks}"/>
+                            </Grid>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Flyout>
+    </Page.Resources>-->
+
+    <StackPanel Margin="12">
+        <ComboBox ItemsSource="{x:Bind schoolWeeks}" Width="100" SelectionChanged="ComboBox_SelectionChanged" HorizontalAlignment="Stretch"/>
+            <Grid HorizontalAlignment="Center">
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="40"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="20"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="课表"/>
-            <StackPanel Grid.Column="1" Orientation="Horizontal">   
-                <TextBlock Width="102" Text="周一"  TextAlignment="Center"/>
+            <TextBlock Text="课表" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <TextBlock Width="102" Text="周一" VerticalAlignment="Center" TextAlignment="Center"/>
                 <TextBlock Width="102" Text="周二" VerticalAlignment="Center" TextAlignment="Center"/>
                 <TextBlock Width="102" Text="周三" VerticalAlignment="Center" TextAlignment="Center"/>
                 <TextBlock Width="102" Text="周四" VerticalAlignment="Center" TextAlignment="Center"/>
@@ -44,7 +82,8 @@
                 <TextBlock Text="4" Grid.Row="3" TextAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock Text="5" Grid.Row="4" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
-            <GridView Grid.Column="1" Grid.Row="1" ItemsSource="{x:Bind tableItems}" SelectionMode="None">
+            <GridView Grid.Column="1" Grid.Row="1" ItemsSource="{x:Bind tableItems}" SelectionMode="None" IsItemClickEnabled="True">
+                <!--ItemClick="GridView_ItemClick" FlyoutBase.AttachedFlyout="{StaticResource LessonDetailFlyout}">-->
                 <GridView.ItemContainerStyle>
                     <Style TargetType="GridViewItem">
                         <Setter Property="Margin" Value="2, 2, 2, 2"/>
@@ -61,89 +100,11 @@
                     <DataTemplate x:DataType="model:LessonTableItem">
                         <Grid Height="100" Width="100">
                             <Rectangle Fill="{x:Bind Color}"/>
-                            <TextBlock Text="{x:Bind Text}" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" />
+                            <TextBlock Text="{x:Bind Text}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" />
                         </Grid>
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
         </Grid>
-
-
-        <!--<Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="120"/>
-                <RowDefinition Height="120"/>
-                <RowDefinition Height="120"/>
-                <RowDefinition Height="120"/>
-                <RowDefinition Height="120"/>
-            </Grid.RowDefinitions>
-            <TextBlock Text="7月" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Row="1" Text="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Row="2" Text="2" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Row="3" Text="3" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Row="4" Text="4" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Row="5" Text="5" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Column="1" Text="周一" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Column="2" Text="周二" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Column="3" Text="周三" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Column="4" Text="周四" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Column="5" Text="周五" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Column="6" Text="周六" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <TextBlock Grid.Column="7" Text="周日" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <Rectangle Fill="#2BDAEC" Grid.Column="1" Grid.Row="1" />
-            <Rectangle Fill="#5AA9ED" Grid.Column="1" Grid.Row="2" />
-            <Rectangle Fill="#6FE67C" Grid.Column="1" Grid.Row="3" />
-            <Rectangle Fill="#B6F45F" Grid.Column="1" Grid.Row="4" />
-            <Rectangle Fill="#FFCA65" Grid.Column="1" Grid.Row="5" />
-
-            <Rectangle Fill="#B6F45F" Grid.Column="2" Grid.Row="1" />
-            <Rectangle Fill="#FFCA65" Grid.Column="2" Grid.Row="2" />
-            <Rectangle Fill="#2BDAEC" Grid.Column="2" Grid.Row="3" />
-            <Rectangle Fill="#5AA9ED" Grid.Column="2" Grid.Row="4" />
-            <Rectangle Fill="#6FE67C" Grid.Column="2" Grid.Row="5" />
-
-            <Rectangle Fill="#5AA9ED" Grid.Column="3" Grid.Row="1" />
-            <Rectangle Fill="#6FE67C" Grid.Column="3" Grid.Row="2" />
-            <Rectangle Fill="#B6F45F" Grid.Column="3" Grid.Row="3" />
-            <Rectangle Fill="#FFCA65" Grid.Column="3" Grid.Row="4" />
-            <Rectangle Fill="#2BDAEC" Grid.Column="3" Grid.Row="5" />
-
-            <Rectangle Fill="#FFCA65" Grid.Column="4" Grid.Row="1" />
-            <Rectangle Fill="#2BDAEC" Grid.Column="4" Grid.Row="2" />
-            <Rectangle Fill="#5AA9ED" Grid.Column="4" Grid.Row="3" />
-            <Rectangle Fill="#6FE67C" Grid.Column="4" Grid.Row="4" />
-            <Rectangle Fill="#B6F45F" Grid.Column="4" Grid.Row="5" />
-
-            <Rectangle Fill="#6FE67C" Grid.Column="5" Grid.Row="1" />
-            <Rectangle Fill="#B6F45F" Grid.Column="5" Grid.Row="2" />
-            <Rectangle Fill="#FFCA65" Grid.Column="5" Grid.Row="3" />
-            <Rectangle Fill="#2BDAEC" Grid.Column="5" Grid.Row="4" />
-            <Rectangle Fill="#5AA9ED" Grid.Column="5" Grid.Row="5" />
-
-            <Rectangle Fill="#2BDAEC" Grid.Column="6" Grid.Row="1" />
-            <Rectangle Fill="#5AA9ED" Grid.Column="6" Grid.Row="2" />
-            <Rectangle Fill="#6FE67C" Grid.Column="6" Grid.Row="3" />
-            <Rectangle Fill="#B6F45F" Grid.Column="6" Grid.Row="4" />
-            <Rectangle Fill="#FFCA65" Grid.Column="6" Grid.Row="5" />
-
-            <Rectangle Fill="#B6F45F" Grid.Column="7" Grid.Row="1" />
-            <Rectangle Fill="#FFCA65" Grid.Column="7" Grid.Row="2" />
-            <Rectangle Fill="#2BDAEC" Grid.Column="7" Grid.Row="3" />
-            <Rectangle Fill="#5AA9ED" Grid.Column="7" Grid.Row="4" />
-            <Rectangle Fill="#6FE67C" Grid.Column="7" Grid.Row="5" />
-
-            <TextBlock Grid.Column="1" Grid.Row="1" Text="11111111" VerticalAlignment="Center" HorizontalAlignment="Center" />
-        </Grid>-->
     </StackPanel>
 </Page>

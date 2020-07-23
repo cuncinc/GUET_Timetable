@@ -68,7 +68,7 @@ namespace GUET
                     // 当导航堆栈尚未还原时，导航到第一页，
                     // 并通过将所需信息作为导航参数传入来配置
                     // 参数
-                    if (ApplicationData.Current.LocalSettings.Values["loginStudentID"] as string != null)
+                    if (ApplicationData.Current.LocalSettings.Values["loginStudentID"] != null)
                     {
                         //如果之前已经登录过了，则直接到主界面
                         rootFrame.Navigate(typeof(MainPage), e.Arguments);

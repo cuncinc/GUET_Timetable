@@ -16,7 +16,7 @@ namespace GUET.BackEnd.Entity
         public double CourseCredit { get; set; }
         public string CourseType { get; set; }
 
-        public Score() { }
+        public Score() {}
 
         public Score(string term, string courseName, string courseNo, string grade, double courseCredit, string courseType)
         {
@@ -26,11 +26,6 @@ namespace GUET.BackEnd.Entity
             Grade = grade;
             CourseCredit = courseCredit;
             CourseType = courseType;
-        }
-
-        public void Show()
-        {
-            Debug.WriteLine($"{Term}\t{CourseName}\t{CourseNo}\t{Grade}\t{CourseCredit}\t{CourseType}");
         }
     }
 }

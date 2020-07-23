@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -20,25 +21,34 @@ namespace GUET.BackEnd.Service
         static readonly string SelectedPath = "/student/Selected.asp";   //?term=2020-2021_1";
         static readonly string CourseTablePath = "/student/coursetable.asp"; //?term=2020-2021_1";
         static readonly string GPAPath = "/student/xuefenji.asp";    //?xn=2018-2019&lwBtnquery=%B2%E9%D1%AF";  //当xn=后直接接&lwB...时，获取入学至今学分绩
-        static readonly string ScorePath = "/student/score.asp?lwBtnquery=查询";   // &ckind=
+        static readonly string ScorePath = "/student/score.asp?ckind=&lwPageSize=1000&lwBtnquery=%B2%E9%D1%AF";   // &ckind=
 
         private static HttpClient client = new HttpClient(new HttpClientHandler() { UseCookies = true });
 
         public static async Task<bool> Login(string studentID, string password)
         {
-            var url = Domain + LoginPath + "?login=%B5%C7%A1%A1%C2%BC&username=" + studentID + "&passwd=" + password;
-            HttpResponseMessage response = await client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-            byte[] responseBodyByte = await response.Content.ReadAsByteArrayAsync();
-            var responseBody = ChangeEncoding(responseBodyByte);
-            if (responseBody.Contains("用户名或口令错，请重试!!"))
+            bool state = false;
+            try
             {
-                return false;
+                var url = Domain + LoginPath + "?login=%B5%C7%A1%A1%C2%BC&username=" + studentID + "&passwd=" + password;
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                byte[] responseBodyByte = await response.Content.ReadAsByteArrayAsync();
+                var responseBody = ChangeEncoding(responseBodyByte);
+                if (responseBody.Contains("用户名或口令错，请重试!!"))
+                {
+                    state = false;
+                }
+                else
+                {
+                    state = true;
+                }
             }
-            else
+            catch (HttpRequestException e)
             {
-                return true;
+                state = false;
             }
+            return state;
         }
 
         private static async Task Login()
@@ -51,13 +61,19 @@ namespace GUET.BackEnd.Service
         public static async Task<List<string>> GetInfo()
         {
             //学号、姓名、班级、年级、学期
-            await Login();
+            string studentID = ApplicationData.Current.LocalSettings.Values["loginStudentID"] as string;
+            string password = ApplicationData.Current.LocalSettings.Values["loginPassword"] as string;
+            await Login(studentID, password);
             var url = Domain + InfoPath;
             HttpResponseMessage response = await client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             byte[] responseBodyByte = await response.Content.ReadAsByteArrayAsync();
             var responseBody = ChangeEncoding(responseBodyByte);
             var list = getInfo(responseBody);
+            foreach (var s in list)
+            {
+                Debug.WriteLine(s);
+            }
             return list;
         }
 
@@ -72,6 +88,12 @@ namespace GUET.BackEnd.Service
                 list.Add(x.Substring(6));
             }
             return list;
+        }
+
+        public static async Task<List<SelectedCourse>> GetSeletedCourse(int termNum)
+        {
+            string term = ChangeTermNumToString(termNum);
+            return await GetSeletedCourse(term);
         }
 
         public static async Task<List<SelectedCourse>> GetSeletedCourse(string term)
@@ -99,6 +121,13 @@ namespace GUET.BackEnd.Service
                 list.Add(course);
             }
             return list;
+        }
+
+        public static async Task<List<Lesson>> GetCourseTable(int termNum)
+        {
+            string term = ChangeTermNumToString(termNum);
+            Debug.WriteLine(term);
+            return await GetCourseTable(term);
         }
 
         public static async Task<List<Lesson>> GetCourseTable(string term)
@@ -195,6 +224,56 @@ namespace GUET.BackEnd.Service
                 list.Add(score);
             }
             return list;
+        }
+
+        static string ChangeTermNumToString(int termNum)
+        {
+            int grade = int.Parse(ApplicationData.Current.LocalSettings.Values["grade"] as string);
+            string term = $"{grade + ((termNum -1) / 2)}-{grade + ((termNum - 1) / 2) + 1}_{((termNum + 1) % 2) + 1}";
+            return term;
+        }
+
+        public async static Task<double> CalculateGPA()    //如2019-2020
+        {
+            List<Score> scores = await GetScore();
+            double gradeSum = 0.0;
+            double creditSum = 0.0;
+            foreach (var score in scores)
+            {
+                if (score.CourseNo.Contains("RZ") || score.Grade.Equals("合格")) //其实是课程代码，当时写错了
+                {
+                    //学分绩不计算任选课和网课。课程代码以RZ开头的为任选，以合格为成绩的都是网课
+                    continue;
+                }
+                if (score.Grade.Equals("优"))
+                {
+                    gradeSum += 95 * score.CourseCredit;
+                }
+                else if (score.Grade.Equals("良"))
+                {
+                    gradeSum += 85 * score.CourseCredit;
+                }
+                else if (score.Grade.Equals("中"))
+                {
+                    gradeSum += 75 * score.CourseCredit;
+                }
+                else if(score.Grade.Equals("及格"))
+                {
+                    gradeSum += 65 * score.CourseCredit;
+                }
+                else if (score.Grade.Equals("不及格"))
+                {
+                    gradeSum += 40 * score.CourseCredit;
+                }
+                else
+                {
+                    gradeSum += double.Parse(score.Grade) * score.CourseCredit;
+                }
+
+                creditSum += score.CourseCredit;
+            }
+            double gpa = gradeSum / creditSum;
+            return gpa;
         }
 
         static string ChangeEncoding(byte[] bs)

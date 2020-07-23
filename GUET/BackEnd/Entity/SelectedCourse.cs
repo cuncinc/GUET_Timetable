@@ -29,10 +29,5 @@ namespace GUET.BackEnd.Entity
             CheckType = checkType;
             FeeAccount = feeAccount;
         }
-
-        public void Show()
-        {
-            Debug.WriteLine($"{CourseNo}\t{CourseCode}\t{CourseName}\t{TeacherName}\t{Status}\t{CheckType}\t{FeeAccount}");
-        }
     }
 }
