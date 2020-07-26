@@ -36,9 +36,11 @@ namespace GUET.FrontEnd
 
         private async void initData()
         {
-            double gpa = await HtmlUtils.CalculateGPA();
-            TextBlock_GPA.Text = $"入学至今的学分绩为 {gpa.ToString("0.0000")}";
             var list = await HtmlUtils.GetScore();
+            double gpa = CalculateGPA(list);
+            TextBlock_GPA.Text = $"入学至今学分绩 {gpa.ToString("0.0000")}";
+
+            scores.Clear();
             foreach(var item in list)
             {
                 scores.Add(item);
@@ -122,6 +124,70 @@ namespace GUET.FrontEnd
                 {
                     dgColumn.SortDirection = null;
                 }
+            }
+        }
+
+        private void Button_Click_ResetScore(object sender, RoutedEventArgs e)
+        {
+            initData();
+        }
+
+        private double CalculateGPA(List<Score> scores)
+        {
+            double gradeSum = 0.0;
+            double creditSum = 0.0;
+            foreach (var score in scores)
+            {
+                if (score.CourseNo.Contains("RZ") || score.CourseNo[0] == 'T') //这里CourseNo是课程代码，不是课号，当时写错了
+                {
+                    //学分绩不计算任选课和通识课。课程代码以RZ开头的为任选，以T为第一个字母的的是通识课
+                    continue;
+                }
+
+                if (score.Grade.Equals("优"))
+                {
+                    gradeSum += 95 * score.CourseCredit;
+                }
+                else if (score.Grade.Equals("良"))
+                {
+                    gradeSum += 85 * score.CourseCredit;
+                }
+                else if (score.Grade.Equals("中"))
+                {
+                    gradeSum += 75 * score.CourseCredit;
+                }
+                else if (score.Grade.Equals("及格"))
+                {
+                    gradeSum += 65 * score.CourseCredit;
+                }
+                else if (score.Grade.Equals("不及格"))
+                {
+                    gradeSum += 40 * score.CourseCredit;
+                }
+                else
+                {
+                    gradeSum += double.Parse(score.Grade) * score.CourseCredit;
+                }
+
+                creditSum += score.CourseCredit;
+            }
+            double gpa = gradeSum / creditSum;
+            return gpa;
+        }
+
+        private void ScoreGrid_CellEditEnded(object sender, DataGridCellEditEndedEventArgs e)
+        {
+            double gpa = CalculateGPA(scores.ToList());
+            TextBlock_GPA.Text = $"入学至今学分绩 {gpa.ToString("0.0000")}";
+        }
+
+        private void ScoreGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            string text = (e.Column.GetCellContent(e.Row) as TextBox).Text;
+            double grade;
+            if (!double.TryParse(text, out grade) || grade<0 || grade>100)
+            {
+                e.Cancel = true;
             }
         }
     }

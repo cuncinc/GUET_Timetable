@@ -27,5 +27,10 @@ namespace GUET.BackEnd.Entity
             CourseCredit = courseCredit;
             CourseType = courseType;
         }
+
+        public void Show()
+        {
+            Debug.WriteLine($"{Term} {CourseNo} {CourseCredit} {Grade}");
+        }
     }
 }

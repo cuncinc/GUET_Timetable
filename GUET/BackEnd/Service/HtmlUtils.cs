@@ -22,6 +22,7 @@ namespace GUET.BackEnd.Service
         static readonly string CourseTablePath = "/student/coursetable.asp"; //?term=2020-2021_1";
         static readonly string GPAPath = "/student/xuefenji.asp";    //?xn=2018-2019&lwBtnquery=%B2%E9%D1%AF";  //当xn=后直接接&lwB...时，获取入学至今学分绩
         static readonly string ScorePath = "/student/score.asp?ckind=&lwPageSize=1000&lwBtnquery=%B2%E9%D1%AF";   // &ckind=
+        static readonly string LogoutPath = "/student/public/logout.asp";
 
         private static HttpClient client = new HttpClient(new HttpClientHandler() { UseCookies = true });
 
@@ -49,6 +50,14 @@ namespace GUET.BackEnd.Service
                 state = false;
             }
             return state;
+        }
+
+        public static async Task Logout()
+        {
+            await Login();
+            var url = Domain + LogoutPath;
+            HttpResponseMessage response = await client.GetAsync(url);
+            //response.EnsureSuccessStatusCode();
         }
 
         private static async Task Login()
@@ -220,6 +229,10 @@ namespace GUET.BackEnd.Service
             {
                 var x = match.Value.Trim();
                 var strs = x.Split(new string[] { "</td>" }, StringSplitOptions.RemoveEmptyEntries);
+                if (strs[2][0] == 'T')  //课程代码以T开头，表示这是通识课
+                {
+                    strs[5] = "通识-" + strs[5];
+                }
                 var score = new Score(strs[0].Substring(4), strs[1], strs[2], strs[3], Double.Parse(strs[4]), strs[5]);
                 list.Add(score);
             }
@@ -231,49 +244,6 @@ namespace GUET.BackEnd.Service
             int grade = int.Parse(ApplicationData.Current.LocalSettings.Values["grade"] as string);
             string term = $"{grade + ((termNum -1) / 2)}-{grade + ((termNum - 1) / 2) + 1}_{((termNum + 1) % 2) + 1}";
             return term;
-        }
-
-        public async static Task<double> CalculateGPA()    //如2019-2020
-        {
-            List<Score> scores = await GetScore();
-            double gradeSum = 0.0;
-            double creditSum = 0.0;
-            foreach (var score in scores)
-            {
-                if (score.CourseNo.Contains("RZ") || score.Grade.Equals("合格")) //其实是课程代码，当时写错了
-                {
-                    //学分绩不计算任选课和网课。课程代码以RZ开头的为任选，以合格为成绩的都是网课
-                    continue;
-                }
-                if (score.Grade.Equals("优"))
-                {
-                    gradeSum += 95 * score.CourseCredit;
-                }
-                else if (score.Grade.Equals("良"))
-                {
-                    gradeSum += 85 * score.CourseCredit;
-                }
-                else if (score.Grade.Equals("中"))
-                {
-                    gradeSum += 75 * score.CourseCredit;
-                }
-                else if(score.Grade.Equals("及格"))
-                {
-                    gradeSum += 65 * score.CourseCredit;
-                }
-                else if (score.Grade.Equals("不及格"))
-                {
-                    gradeSum += 40 * score.CourseCredit;
-                }
-                else
-                {
-                    gradeSum += double.Parse(score.Grade) * score.CourseCredit;
-                }
-
-                creditSum += score.CourseCredit;
-            }
-            double gpa = gradeSum / creditSum;
-            return gpa;
         }
 
         static string ChangeEncoding(byte[] bs)

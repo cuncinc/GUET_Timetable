@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GUET.BackEnd.Service;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -56,6 +57,7 @@ namespace GUET.FrontEnd
         {
             //删除所有暂存的数据
             await ApplicationData.Current.ClearAsync();
+            await HtmlUtils.Logout();
             //ApplicationData.Current.LocalSettings.Values.Remove("loginStudentID");
             //ApplicationData.Current.LocalSettings.Values.Remove("loginPassword");
             //ApplicationData.Current.LocalSettings.Values.Remove("grade");
