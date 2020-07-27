@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -24,7 +25,7 @@ namespace GUET.FrontEnd
     {
         List<string> schoolWeeks = new List<string>();  //数据集，存储“第1周”到“第20周”
         List<Lesson> lessonTable = new List<Lesson>();    //数据集，存储课表的信息
-        string[] colors = { "#2BDAEC", "#FF7A9C", "#EF6A6A", "#B6F45F", "#5AA9ED", "#6FE67C", "#FFCA65", "#FC9065", "#AB73D3", "#ADC190", "#27E7CA", "#55C0FD", "#FCB25B", "#AB73D3" };
+        string[] colors = { "#2BDAEC", "#EF6A6A", "#AB73D3", "#8DC8DA", "#55C0FD", "#FCB25B", "#6C85AE", "#D35B7E", "#FF7A9C", "#B6F45F", "#6FE67C",  "#ADC190", "#FC9065", "#DCBEA4", "#27E7CA", "#E5CED6", "#5AA9ED", };
 
         ObservableCollection<LessonTableItem> tableItems = new ObservableCollection<LessonTableItem>(); //数据集，存储gridView的数据，35个
         //键值对，课号是键，GridView上的格子颜色是值。保证课号一致的格子有相同的颜色；课号不一致的格子颜色不同
@@ -50,9 +51,13 @@ namespace GUET.FrontEnd
                 tableItems.Add(new LessonTableItem());
             }
 
-            //从网页获取课表数据
-            lessonTable = await HtmlUtils.GetCourseTable(4);
+            int curSchoolWeek = (int)ApplicationData.Current.LocalSettings.Values["currentWeekNum"];
+            ComboBox_schoolWeeks.SelectedIndex = curSchoolWeek - 1;
 
+            int termNum = (int)ApplicationData.Current.LocalSettings.Values["currentTermNum"];
+            lessonTable = await HtmlUtils.GetCourseTable(termNum);
+
+            //从网页获取课表数据
             foreach (var lesson in lessonTable)
             {
                 string text = lesson.CourseName;
@@ -61,10 +66,13 @@ namespace GUET.FrontEnd
                     Cno_Color_Dic.Add(lesson.CourseNo, colors[Cno_Color_Dic.Count]);
                 }
             }
-        }
 
-        private void showCourseTable(int curSchoolWeek)
+            showCourseTable(curSchoolWeek);
+        }
+         
+        private void showCourseTable(int selectedSchoolWeek)
         {
+            //修改课表
             foreach (var lesson in lessonTable)
             {
                 LessonTableItem item = null;
@@ -75,6 +83,7 @@ namespace GUET.FrontEnd
                     text += $" @{lesson.Classroom}";
                 }
                 item = new LessonTableItem(lesson.CourseNo, text);
+                Debug.WriteLine($"index:{index} section:{lesson.AttendSection} week:{lesson.AttendSection} name:{lesson.CourseName}");
                 tableItems[index] = item;
             }
 
@@ -89,7 +98,7 @@ namespace GUET.FrontEnd
                     //如果没有教室信息则不显示
                     text += $" @{lesson.Classroom}";
                 }
-                if (curSchoolWeek >= lesson.StartWeek && curSchoolWeek <= lesson.EndWeek)
+                if (selectedSchoolWeek >= lesson.StartWeek && selectedSchoolWeek <= lesson.EndWeek)
                 {
                     string color = Cno_Color_Dic[lesson.CourseNo];
                     item = new LessonTableItem(lesson.CourseNo, color, text);
@@ -100,8 +109,7 @@ namespace GUET.FrontEnd
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string selectedStr = e.AddedItems[0].ToString();
-            int curSchoolWeek = int.Parse(selectedStr.Substring(1, selectedStr.IndexOf("周") - 1));
+            int curSchoolWeek = schoolWeeks.IndexOf(e.AddedItems[0].ToString()) + 1;
             showCourseTable(curSchoolWeek);
         }
 

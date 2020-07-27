@@ -48,7 +48,7 @@
     </Page.Resources>-->
 
     <StackPanel Margin="12">
-        <ComboBox ItemsSource="{x:Bind schoolWeeks}" Width="100" SelectionChanged="ComboBox_SelectionChanged" HorizontalAlignment="Stretch"/>
+        <ComboBox x:Name="ComboBox_schoolWeeks" ItemsSource="{x:Bind schoolWeeks}" Width="100" SelectionChanged="ComboBox_SelectionChanged" HorizontalAlignment="Stretch"/>
             <Grid HorizontalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>

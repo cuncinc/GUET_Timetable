@@ -34,23 +34,7 @@ namespace GUET
         {
             this.InitializeComponent();
             //mainPageFrame.Navigate(typeof(CourseTablePage)); 
-            initData();
-        }
-
-        private async void initData()
-        {
-            //获取信息
-            var infos = await HtmlUtils.GetInfo();
-            string studentName = infos[1];     //姓名
-            string grade = infos[3];    //年级，如2020
-            string term = infos[4];     //学期，如2020-2021_1表示大一上，2020-2021_2表示大一下
-            int currentTermNum = 2 * (int.Parse(term.Substring(0, 4)) - int.Parse(grade)) + int.Parse(term.Substring(10));
-
-            //暂存信息
-            ApplicationData.Current.LocalSettings.Values["grade"] = grade;
-            ApplicationData.Current.LocalSettings.Values["studentName"] = studentName;
-            ApplicationData.Current.LocalSettings.Values["currentTermNum"] = currentTermNum;
-        }
+        }        
 
         private void NavigationViewItem_Tapped_CourseTable(object sender, TappedRoutedEventArgs e)
         {

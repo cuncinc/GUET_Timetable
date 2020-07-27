@@ -10,11 +10,13 @@
 
     <Grid>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <!--<ComboBox ItemsSource="{x:Bind terms}" Width="100" HorizontalAlignment="Stretch"/>
-            <ComboBox ItemsSource="{x:Bind schoolWeeks}" Width="100" HorizontalAlignment="Stretch"/>-->
-            <TextBlock x:Name="TextBlock_Name"/>
-            <TextBlock x:Name="TextBlock_grade"/>
-            <HyperlinkButton Content="退出登录" Click="HyperlinkButton_Click_Logout"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,24">
+                <ComboBox x:Name="ComboBox_term" ItemsSource="{x:Bind terms}" Width="100" HorizontalAlignment="Stretch" Header="课表学期" Margin="0,0,24,0" SelectionChanged="ComboBox_SelectionChanged_Term"/>
+                <ComboBox x:Name="ComboBox_week" ItemsSource="{x:Bind schoolWeeks}" Width="100" HorizontalAlignment="Stretch" Header="当前周次" SelectionChanged="ComboBox_SelectionChanged_Week"/>
+            </StackPanel>
+            <TextBlock x:Name="TextBlock_Name" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="TextBlock_grade" HorizontalAlignment="Center"/>
+            <HyperlinkButton Content="退出登录" Click="HyperlinkButton_Click_Logout" HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Page>

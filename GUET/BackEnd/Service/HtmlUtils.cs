@@ -29,25 +29,18 @@ namespace GUET.BackEnd.Service
         public static async Task<bool> Login(string studentID, string password)
         {
             bool state = false;
-            try
-            {
-                var url = Domain + LoginPath + "?login=%B5%C7%A1%A1%C2%BC&username=" + studentID + "&passwd=" + password;
-                HttpResponseMessage response = await client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
-                byte[] responseBodyByte = await response.Content.ReadAsByteArrayAsync();
-                var responseBody = ChangeEncoding(responseBodyByte);
-                if (responseBody.Contains("用户名或口令错，请重试!!"))
-                {
-                    state = false;
-                }
-                else
-                {
-                    state = true;
-                }
-            }
-            catch (HttpRequestException e)
+            var url = Domain + LoginPath + "?login=%B5%C7%A1%A1%C2%BC&username=" + studentID + "&passwd=" + password;
+            HttpResponseMessage response = await client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            byte[] responseBodyByte = await response.Content.ReadAsByteArrayAsync();
+            var responseBody = ChangeEncoding(responseBodyByte);
+            if (responseBody.Contains("用户名或口令错，请重试!!"))
             {
                 state = false;
+            }
+            else
+            {
+                state = true;
             }
             return state;
         }
@@ -135,7 +128,6 @@ namespace GUET.BackEnd.Service
         public static async Task<List<Lesson>> GetCourseTable(int termNum)
         {
             string term = ChangeTermNumToString(termNum);
-            Debug.WriteLine(term);
             return await GetCourseTable(term);
         }
 
@@ -156,7 +148,9 @@ namespace GUET.BackEnd.Service
         {
             var list = new List<Lesson>();
             html = Regex.Replace(html, @"<td align='center'>", "");
+            html = Regex.Replace(html, @"<td align=center>", "");
             int section = 1;
+            //解析正课
             foreach (Match match in Regex.Matches(html, "</th>.*</td>"))
             {
                 var x = match.Value.Trim();
@@ -184,6 +178,30 @@ namespace GUET.BackEnd.Service
                     ++weekday;
                 }
                 ++section;
+            }
+            //解析实验课
+            List<string> week = new List<string>(new string[] { "一", "二", "三", "四", "五", "六", "日" });
+            int j = 0;  //用去去掉正课
+            foreach (Match match in Regex.Matches(html, "<tr>.*</td>"))
+            {
+                var x = match.Value.Trim();
+                if (j < 5)
+                {
+                    //去掉正课
+                    ++j;
+                    continue;
+                }
+                x = Regex.Replace(x, "<tr>", "");
+                var strs = x.Split(new string[] { "</td>" }, StringSplitOptions.RemoveEmptyEntries);
+                string courseName = strs[0];
+                string classroom = strs[4];
+                classroom = Regex.Replace(classroom, "花江校区", "");
+                int startWeek = int.Parse(strs[3].Substring(1, strs[3].IndexOf("周") - 1));
+                int attendSection = int.Parse(strs[3].Substring(strs[3].LastIndexOf("第") + 1, 1));
+                string attendWeekDayText = strs[3].Substring(strs[3].IndexOf("期") + 1, 1);
+                int attendWeekDay = week.IndexOf(attendWeekDayText) + 1;
+                var lesson = new Lesson("实验", "(实验)" + courseName, classroom, startWeek, startWeek, attendWeekDay, attendSection);
+                list.Add(lesson);
             }
             return list;
         }

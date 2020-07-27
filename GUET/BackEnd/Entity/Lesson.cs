@@ -22,6 +22,10 @@ namespace GUET.BackEnd.Entity
 
         public Lesson(string courseNo, string courseName, string classroom, int startWeek, int endWeek, int attendWeekDay, int attendSection)
         {
+            if (attendSection>5)
+            {
+                attendSection = 5;
+            }
             CourseNo = courseNo;
             CourseName = courseName;
             Classroom = classroom;
