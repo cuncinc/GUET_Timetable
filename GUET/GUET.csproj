@@ -25,6 +25,7 @@
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>347ECDE207FE7A41D10DEE96BB62C49662E4F299</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -153,7 +154,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <Content Include="AppPackages\GUET_1.0.5.0_Test\GUET_1.0.5.0_x86_x64.cer" />
     <None Include="GUET_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

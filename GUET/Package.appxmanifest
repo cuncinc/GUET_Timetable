@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="dcbde4e3-3bf4-49df-afec-5be02e67c2aa" Publisher="CN=CC" Version="1.0.5.0" />
+  <Identity Name="dcbde4e3-3bf4-49df-afec-5be02e67c2aa" Publisher="CN=chunson" Version="1.0.12.0" />
   <mp:PhoneIdentity PhoneProductId="dcbde4e3-3bf4-49df-afec-5be02e67c2aa" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>GUET</DisplayName>
@@ -28,7 +28,7 @@
   <Extensions>
     <Extension Category="windows.certificates">
       <Certificates>
-        <Certificate StoreName="CC" Content="AppPackages\GUET_1.0.5.0_Test\GUET_1.0.5.0_x86_x64.cer" />
+        <SelectionCriteria AutoSelect="true" />
       </Certificates>
     </Extension>
   </Extensions>
