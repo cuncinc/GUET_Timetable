@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Center">
             <TextBox x:Name="TextBlock_GPA" IsReadOnly="True" Width="200"/>
-            <Button Content="重置成绩" Margin="36,0,0,0" Click="Button_Click_ResetScore" ToolTipService.ToolTip="可修改表格中的成绩和学分来查看学分绩，可点击按钮进行重置。注意不要输入非法数据，优良中等也用数字95、85、75代替。"/>
+            <Button Content="重新获取" Margin="36,0,0,0" Click="Button_Click_ReGetScore" ToolTipService.ToolTip="可修改表格中的成绩和学分来查看学分绩，可点击按钮进行重置。注意不要输入非法数据，优良中等也用数字95、85、75代替。"/>
         </StackPanel>
         <controls:DataGrid
             x:Name="ScoreGrid"

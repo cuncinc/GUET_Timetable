@@ -73,21 +73,32 @@ namespace GUET.FrontEnd
         private void showCourseTable(int selectedSchoolWeek)
         {
             //修改课表
+            //先渲染没有颜色的格子
             foreach (var lesson in lessonTable)
             {
                 LessonTableItem item = null;
                 int index = (lesson.AttendSection - 1) * 7 + lesson.AttendWeekDay - 1;  //List的index
-                string text = lesson.CourseName;
-                if (!string.IsNullOrWhiteSpace(lesson.Classroom))
-                {
-                    text += $" @{lesson.Classroom}";
+
+                //这个if-else不知道对不对，逻辑我有点理不清
+                if (selectedSchoolWeek > lesson.EndWeek)    //以后不会再有的课就不再显示
+                { 
+                    item = new LessonTableItem();
                 }
-                item = new LessonTableItem(lesson.CourseNo, text);
-                Debug.WriteLine($"index:{index} section:{lesson.AttendSection} week:{lesson.AttendSection} name:{lesson.CourseName}");
+                else
+                {
+                    string text = lesson.CourseName;
+                    if (!string.IsNullOrWhiteSpace(lesson.Classroom))
+                    {
+                        text += $" @{lesson.Classroom}";
+                    }
+                    item = new LessonTableItem(lesson.CourseNo, text);  
+                }
+                //Debug.WriteLine($"index:{index} section:{lesson.AttendSection} week:{lesson.AttendSection} name:{lesson.CourseName}");
                 tableItems[index] = item;
             }
 
-            //要渲染2遍，不然无颜色的格子会覆盖掉有颜色的格子
+            //渲染有颜色的格子，
+            //这个for一定不能少，不然先渲染的无颜色的格子会覆盖掉有颜色的格子
             foreach (var lesson in lessonTable)
             {
                 LessonTableItem item = null;

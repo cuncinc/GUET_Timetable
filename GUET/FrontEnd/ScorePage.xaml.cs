@@ -127,7 +127,7 @@ namespace GUET.FrontEnd
             }
         }
 
-        private void Button_Click_ResetScore(object sender, RoutedEventArgs e)
+        private void Button_Click_ReGetScore(object sender, RoutedEventArgs e)
         {
             initData();
         }
