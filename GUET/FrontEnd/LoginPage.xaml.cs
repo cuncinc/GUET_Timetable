@@ -27,6 +27,7 @@ namespace GUET.FrontEnd
     /// </summary>
     public sealed partial class LoginPage : Page
     {
+        WebService webService;
         public LoginPage()
         {
             this.InitializeComponent();
@@ -38,12 +39,13 @@ namespace GUET.FrontEnd
 
             string studentID = textBox_loginStudentID.Text;
             string password = passwordBox.Password;
-            if (await HtmlUtils.Login(studentID, password))  //登录验证
+            webService = new WebService(studentID, password);
+            if (await webService.Login())  //登录验证
             {
                 //账号密码验证成功，注意不要把学号和密码的存储下移，在GetInfo中会用到
                 ApplicationData.Current.LocalSettings.Values["loginStudentID"] = studentID;
                 ApplicationData.Current.LocalSettings.Values["loginPassword"] = password;
-                initData();
+                //initData();
                 this.Frame.Navigate(typeof(MainPage));  //跳转到主界面
             }
             else

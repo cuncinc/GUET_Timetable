@@ -1,17 +1,22 @@
-﻿using System.Diagnostics;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GUET.BackEnd.Entity
 {
     class Lesson
     {
+        public string CourseType { get; set; }  //课程性质，如专业限选、学科基础
+        public string CourseId { get; set; }    //课程代码
         public string CourseNo { get; set; }    //课号
-        public string CourseName { get; set; }
-        public string TeacherName { get; set; }
-        public int StartWeek { get; set; }
-        public int EndWeek { get; set; }
-        public string Classroom { get; set; }
-        public int AttendWeekDay { get; set; }   //上课星期
-        public int AttendSection { get; set; }   //上课节次
+        public string CourseName { get; set; }  //课程名称
+        public string TeacherName { get; set; } //教师名字
+        public int StartWeek { get; set; }      //开始周次
+        public int EndWeek { get; set; }        //结束周次
+        public string Classroom { get; set; }   //教室
+        public int AttendWeekDay { get; set; }  //上课星期几
+        public int AttendSection { get; set; }  //上课节次
+        public double Credit { get; set; }      //学分
 
         public Lesson() { }
 
@@ -30,7 +35,7 @@ namespace GUET.BackEnd.Entity
             AttendSection = attendSection;
         }
 
-        public void Show()
+        public void ShowInConsole()
         {
             Debug.WriteLine($"{CourseNo}\t{CourseName}\t{Classroom}\t{StartWeek}\t{EndWeek}\t{AttendWeekDay}\t{AttendSection}");
         }
