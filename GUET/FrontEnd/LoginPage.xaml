@@ -13,6 +13,9 @@
             <TextBlock Text="用户登录" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold" Margin="0,0,0,20"/>
             <TextBox x:Name="textBox_loginStudentID" PlaceholderText="学号" FontSize="20" MaxLength="16" Width="320"/>
             <PasswordBox x:Name="passwordBox" PlaceholderText="密码" FontSize="20" MaxLength="16" Width="320" Margin="0,8,0,0" KeyDown="PasswordBox_KeyDown"/>
+            <TextBox x:Name="textBox_loginValidateCode" PlaceholderText="验证码" FontSize="20" MaxLength="4" Width="320" Margin="0,8,0,0" KeyDown="textBox_loginValidateCode_KeyDown"/>
+            <Image x:Name="image_validateCode" Margin="0,20,0,0" Width="80"/>
+            <Button x:Name="button_getCode" HorizontalAlignment="Center" Content="获取验证码" FontSize="22" FontWeight="Bold"  Width="160" Margin="0,20,0,0" Click="Button_getCode_Click"/>
             <Button x:Name="button_login" HorizontalAlignment="Center" Content="登 录" FontSize="22" FontWeight="Bold"  Width="160" Margin="0,20,0,0" Click="Button_login_Click"/>
         </StackPanel>
         <ProgressRing Name="progressRing_login" Height="100" Width="100" Grid.Column="1" HorizontalAlignment="Center"  VerticalAlignment="Center"/>

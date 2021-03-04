@@ -12,17 +12,20 @@ namespace GUET.BackEnd.Entity
         public string Term { get; set; }
         public string CourseName { get; set; }
         public string CourseNo { get; set; }
-        public string Grade { get; set; }
+        public double ExamScore { get; set; }
+        public double Grade { get; set; }
         public double CourseCredit { get; set; }
         public string CourseType { get; set; }
 
+
         public Score() {}
 
-        public Score(string term, string courseName, string courseNo, string grade, double courseCredit, string courseType)
+        public Score(string term, string courseName, string courseNo, double examScore, double grade, double courseCredit, string courseType)
         {
             Term = term;
             CourseName = courseName;
             CourseNo = courseNo;
+            ExamScore = examScore;
             Grade = grade;
             CourseCredit = courseCredit;
             CourseType = courseType;

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -28,6 +29,7 @@ namespace GUET.FrontEnd
     public sealed partial class ScorePage : Page
     {
         ObservableCollection<Score> scores = new ObservableCollection<Score>();
+        WebService webService = new WebService();
         public ScorePage()
         {
             this.InitializeComponent();
@@ -36,9 +38,10 @@ namespace GUET.FrontEnd
 
         private async void initData()
         {
-            var list = await HtmlUtils.GetScore();
-            double gpa = CalculateGPA(list);
-            TextBlock_GPA.Text = $"入学至今学分绩 {gpa.ToString("0.0000")}";
+            var list = await webService.GetScores(null);
+            //double gpa = CalculateGPA(list);
+            double gpa = await GetGPA();
+            TextBlock_GPA.Text = $"入学至今学分绩 {gpa.ToString("0.00")}";
 
             scores.Clear();
             foreach(var item in list)
@@ -115,6 +118,19 @@ namespace GUET.FrontEnd
                     e.Column.SortDirection = DataGridSortDirection.Descending;
                 }
             }
+            else if (e.Column.Tag.ToString() == "ExamScore")
+            {
+                if (e.Column.SortDirection == null || e.Column.SortDirection == DataGridSortDirection.Descending)
+                {
+                    ScoreGrid.ItemsSource = new ObservableCollection<Score>(from score in scores orderby score.ExamScore ascending select score);
+                    e.Column.SortDirection = DataGridSortDirection.Ascending;
+                }
+                else
+                {
+                    ScoreGrid.ItemsSource = new ObservableCollection<Score>(from score in scores orderby score.ExamScore descending select score);
+                    e.Column.SortDirection = DataGridSortDirection.Descending;
+                }
+            }
             // add code to handle sorting by other columns as required
 
             // Remove sorting indicators from other columns
@@ -127,9 +143,9 @@ namespace GUET.FrontEnd
             }
         }
 
-        private void Button_Click_ReGetScore(object sender, RoutedEventArgs e)
+        private async Task<double> GetGPA()
         {
-            initData();
+            return await webService.GetGPA();
         }
 
         private double CalculateGPA(List<Score> scores)
@@ -166,7 +182,7 @@ namespace GUET.FrontEnd
                 }
                 else
                 {
-                    gradeSum += double.Parse(score.Grade) * score.CourseCredit;
+                    gradeSum += score.Grade * score.CourseCredit;
                 }
 
                 creditSum += score.CourseCredit;
@@ -177,8 +193,9 @@ namespace GUET.FrontEnd
 
         private void ScoreGrid_CellEditEnded(object sender, DataGridCellEditEndedEventArgs e)
         {
-            double gpa = CalculateGPA(scores.ToList());
-            TextBlock_GPA.Text = $"入学至今学分绩 {gpa.ToString("0.0000")}";
+            //double gpa = CalculateGPA(scores.ToList());
+            //double gpa = await GetGPA();
+            //TextBlock_GPA.Text = $"入学至今学分绩 {gpa.ToString("0.00")}";
         }
 
         private void ScoreGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)

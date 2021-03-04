@@ -136,6 +136,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BackEnd\Entity\Lesson.cs" />
+    <Compile Include="BackEnd\Entity\PersonInfo.cs" />
     <Compile Include="BackEnd\Model\CourseDetail.cs" />
     <Compile Include="BackEnd\Model\LessonTableItem.cs" />
     <Compile Include="BackEnd\Entity\Score.cs" />

@@ -16,7 +16,6 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Center">
             <TextBox x:Name="TextBlock_GPA" IsReadOnly="True" Width="200"/>
-            <Button Content="重新获取" Margin="36,0,0,0" Click="Button_Click_ReGetScore" ToolTipService.ToolTip="可修改表格中的成绩和学分来查看学分绩，可点击按钮进行重置。注意不要输入非法数据，优良中等也用数字95、85、75代替。"/>
         </StackPanel>
         <controls:DataGrid
             x:Name="ScoreGrid"
@@ -26,8 +25,8 @@
             AutoGenerateColumns="False"
             HorizontalScrollBarVisibility="Visible"
             VerticalScrollBarVisibility="Visible"
-            AlternatingRowBackground="Linen"
-            AlternatingRowForeground="Gray"
+            AlternatingRowBackground="#F4F4F6"
+            AlternatingRowForeground="#333333"
             AreRowDetailsFrozen="True"
             AreRowGroupHeadersFrozen="True"
             CanUserSortColumns="True"
@@ -37,7 +36,7 @@
             MaxColumnWidth="400"
             GridLinesVisibility="Horizontal"
             HeadersVisibility="Column"
-            IsReadOnly="False"
+            IsReadOnly="True"
             RowDetailsVisibilityMode="Collapsed"
             SelectionMode="Single"
             ItemsSource="{x:Bind scores}"
@@ -47,6 +46,7 @@
             <controls:DataGrid.Columns>
                 <controls:DataGridTextColumn Header="学期" Binding="{Binding Term}" Tag="Term" />
                 <controls:DataGridTextColumn Header="课程" Binding="{Binding CourseName}" Tag="CourseName" />
+                <controls:DataGridTextColumn Header="考试" Binding="{Binding ExamScore}" Tag="ExamScore" />
                 <controls:DataGridTextColumn Header="成绩" Binding="{Binding Grade}" Tag="Grade" />
                 <controls:DataGridTextColumn Header="学分" Binding="{Binding CourseCredit}" Tag="CourseCredit" />
                 <controls:DataGridTextColumn Header="类型" Binding="{Binding CourseType}" Tag="CourseType" />

@@ -23,6 +23,7 @@ namespace GUET.FrontEnd
 {
     public sealed partial class CourseTablePage : Page
     {
+        WebService webService = new WebService();
         List<string> schoolWeeks = new List<string>();  //数据集，存储“第1周”到“第20周”
         List<Lesson> lessonTable = new List<Lesson>();    //数据集，存储课表的信息
         string[] colors = { "#2BDAEC", "#EF6A6A", "#AB73D3", "#8DC8DA", "#55C0FD", "#FCB25B", "#6C85AE", "#D35B7E", "#FF7A9C", "#B6F45F", "#6FE67C",  "#ADC190", "#FC9065", "#DCBEA4", "#27E7CA", "#E5CED6", "#5AA9ED", };
@@ -55,7 +56,8 @@ namespace GUET.FrontEnd
             ComboBox_schoolWeeks.SelectedIndex = curSchoolWeek - 1;
 
             int termNum = (int)ApplicationData.Current.LocalSettings.Values["currentTermNum"];
-            lessonTable = await HtmlUtils.GetCourseTable(termNum);
+            lessonTable = await webService.CurrentLessons();
+            //lessonTable = await webService.GetLessons("");
 
             //从网页获取课表数据
             foreach (var lesson in lessonTable)

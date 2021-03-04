@@ -249,8 +249,8 @@ namespace GUET.BackEnd.Service
                 {
                     strs[5] = "通识-" + strs[5];
                 }
-                var score = new Score(strs[0].Substring(4), strs[1], strs[2], strs[3], Double.Parse(strs[4]), strs[5]);
-                list.Add(score);
+                //var score = new Score(strs[0].Substring(4), strs[1], strs[2], strs[3], Double.Parse(strs[4]), strs[5]);
+                //list.Add(score);
             }
             return list;
         }

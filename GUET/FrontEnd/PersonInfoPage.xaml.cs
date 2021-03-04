@@ -54,7 +54,7 @@ namespace GUET.FrontEnd
         {
             //删除所有暂存的数据
             await ApplicationData.Current.ClearAsync();
-            await HtmlUtils.Logout();
+            new WebService().Logout();
 
             (Window.Current.Content as Frame).Navigate(typeof(LoginPage));  //跳转到登录界面
         }
